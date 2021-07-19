@@ -12,14 +12,26 @@
       }
     ]
   },
-  "description": "For black-box monitoring",
+  "description": "",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 8,
-  "iteration": 1625820028090,
+  "id": 7,
+  "iteration": 1626660129539,
   "links": [],
   "panels": [
+    {
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 17,
+      "title": "gRPC",
+      "type": "row"
+    },
     {
       "aliasColors": {},
       "bars": false,
@@ -36,11 +48,12 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "hiddenSeries": false,
       "id": 4,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
         "current": false,
         "max": false,
@@ -67,9 +80,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum without(envoy_response_code,instance,job) (rate(envoy_cluster_upstream_rq_total{envoy_cluster_name=\"$api\"}[5m]))",
+          "expr": "sum by (grpc_method) (\n  rate(grpc_server_handled_total{job=\"pipecd-server\", pipecd_grpc_service=\"$api\"}[5m])\n)",
           "interval": "",
-          "legendFormat": "$api",
+          "legendFormat": "{{method}}",
           "queryType": "randomWalk",
           "refId": "A"
         }
@@ -121,7 +134,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "Non-4xx Error Percentage  for each gRPC method",
+      "description": "Non-NotFound Error Percentage for each gRPC method",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -132,11 +145,12 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 10
+        "y": 11
       },
       "hiddenSeries": false,
       "id": 2,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
         "current": false,
         "max": false,
@@ -147,7 +161,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "alertThreshold": true
       },
@@ -163,11 +177,11 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by(envoy_cluster_name) (rate(envoy_cluster_upstream_rq_xx{envoy_response_code_class=~\"5\", job=\"pipecd-gateway\", envoy_cluster_name=\"$api\"}[5m]))\n/\nsum by(envoy_cluster_name) (rate(envoy_cluster_upstream_rq_xx{job=\"pipecd-gateway\", envoy_cluster_name=\"$api\"}[5m]))\n* 100 or on() vector(0)",
+          "expr": "sum by (grpc_method) (\n  rate(grpc_server_handled_total{job=\"pipecd-server\", pipecd_grpc_service=\"$api\", grpc_code!=\"OK\", grpc_code!=\"NotFound\"}[5m])\n)\n/\nsum by (grpc_method) (\n  rate(grpc_server_handled_total{job=\"pipecd-server\", pipecd_grpc_service=\"$api\"}[5m])\n) * 100\n",
           "format": "time_series",
           "instant": false,
           "interval": "",
-          "legendFormat": "$api",
+          "legendFormat": "{{method}}",
           "queryType": "randomWalk",
           "refId": "A"
         }
@@ -176,7 +190,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Non-4xx Error Percentage",
+      "title": "Error Percentage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -195,7 +209,7 @@
           "format": "percent",
           "label": "",
           "logBase": 1,
-          "max": null,
+          "max": "100",
           "min": "0",
           "show": true
         },
@@ -230,11 +244,12 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 10
+        "y": 11
       },
       "hiddenSeries": false,
       "id": 14,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
         "current": false,
         "max": false,
@@ -261,7 +276,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "histogram_quantile(\n  0.99,\n  sum without(instance, job)(rate(pipecd_gateway_requests_duration_bucket{envoy_cluster_name=\"$api\"}[5m]))\n)",
+          "expr": "histogram_quantile(\n  0.99,\n  sum without(instance, job)(rate(pipecd_gateway_requests_duration_bucket{pipecd_grpc_service=\"$api\"}[5m]))\n)",
           "interval": "",
           "legendFormat": "{{method}}",
           "queryType": "randomWalk",
@@ -310,12 +325,25 @@
       }
     },
     {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 19
+      },
+      "id": 19,
+      "panels": [],
+      "title": "HTTP",
+      "type": "row"
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "99th quantile of request size per gRPC method",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -323,14 +351,15 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 10,
+        "w": 24,
         "x": 0,
-        "y": 18
+        "y": 20
       },
       "hiddenSeries": false,
-      "id": 8,
+      "id": 22,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
         "current": false,
         "max": false,
@@ -357,9 +386,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "histogram_quantile(\n  0.99,\n  sum without(instance, job)(rate(envoy_cluster_upstream_rq_body_size_bucket{envoy_cluster_name=\"$api\"}[5m]))\n) * (1024 * 1024)",
+          "expr": "sum by (path) (\n  rate(pipecd_server_http_requests_total{job=\"pipecd-server\"}[5m])\n)",
           "interval": "",
-          "legendFormat": "{{method}}",
+          "legendFormat": "{{path}}",
           "queryType": "randomWalk",
           "refId": "A"
         }
@@ -368,7 +397,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "99th Quantile of Request Size",
+      "title": "Requests/sec [rate-5m]",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -384,7 +413,7 @@
       },
       "yaxes": [
         {
-          "format": "decmbytes",
+          "format": "short",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -411,7 +440,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
-      "description": "99th quantile of response size per gRPC method",
+      "description": "5xx Error Percentage for each path",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -421,12 +450,13 @@
       "gridPos": {
         "h": 8,
         "w": 12,
-        "x": 12,
-        "y": 18
+        "x": 0,
+        "y": 30
       },
       "hiddenSeries": false,
-      "id": 15,
+      "id": 23,
       "legend": {
+        "alignAsTable": true,
         "avg": false,
         "current": false,
         "max": false,
@@ -437,7 +467,7 @@
       },
       "lines": true,
       "linewidth": 1,
-      "nullPointMode": "null",
+      "nullPointMode": "null as zero",
       "options": {
         "alertThreshold": true
       },
@@ -453,9 +483,11 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "histogram_quantile(\n  0.99,\n  sum without(instance, job)(rate(envoy_cluster_upstream_rs_body_size_bucket{envoy_cluster_name=\"$api\"}[5m]))\n) * (1024 * 1024)",
+          "expr": "sum by (path) (\n  rate(pipecd_server_http_requests_total{job=\"pipecd-server\", code=~\"5.*\"}[5m])\n)\n/\nsum by (path) (\n  rate(pipecd_server_http_requests_total{job=\"pipecd-server\"}[5m])\n) * 100\n",
+          "format": "time_series",
+          "instant": false,
           "interval": "",
-          "legendFormat": "{{method}}",
+          "legendFormat": "{{path}}",
           "queryType": "randomWalk",
           "refId": "A"
         }
@@ -464,7 +496,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "99th Quantile of Response Size",
+      "title": "5xx Error Percentage",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -480,7 +512,104 @@
       },
       "yaxes": [
         {
-          "format": "decmbytes",
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "Prometheus",
+      "description": "99th Quantile of Request Duration for each path",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 30
+      },
+      "hiddenSeries": false,
+      "id": 24,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.3",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "histogram_quantile(\n  0.99,\n  sum without(instance, job)(rate(pipecd_server_http_request_duration_milliseconds_bucket[5m]))\n)",
+          "interval": "",
+          "legendFormat": "{{path}}",
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "99th Quantile of Request Duration",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -512,11 +641,11 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "server-api",
-          "value": "server-api"
+          "text": "piped",
+          "value": "piped"
         },
         "datasource": "Prometheus",
-        "definition": "label_values(envoy_cluster_name)",
+        "definition": "label_values(pipecd_grpc_service)",
         "description": null,
         "error": null,
         "hide": 0,
@@ -526,7 +655,7 @@
         "name": "api",
         "options": [],
         "query": {
-          "query": "label_values(envoy_cluster_name)",
+          "query": "label_values(pipecd_grpc_service)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 1,
@@ -547,7 +676,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "gRPC Incoming Request",
+  "title": "Incoming Request",
   "uid": "3jeba3R7z",
-  "version": 4
+  "version": 12
 }

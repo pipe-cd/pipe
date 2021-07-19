@@ -16,8 +16,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1625809745695,
+  "id": 5,
+  "iteration": 1626663961048,
   "links": [],
   "panels": [
     {
@@ -400,9 +400,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum by (job) (go_goroutines{job=\"$service\"})",
+          "expr": "go_goroutines{job=\"$service\"}",
           "interval": "",
-          "legendFormat": "$service",
+          "legendFormat": "{{instance}}",
           "queryType": "randomWalk",
           "refId": "A"
         }
@@ -447,20 +447,6 @@
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "collapsed": false,
-      "datasource": null,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 23
-      },
-      "id": 28,
-      "panels": [],
-      "title": "Go Stats",
-      "type": "row"
     }
   ],
   "refresh": "10s",
@@ -771,5 +757,5 @@
   "timezone": "",
   "title": "Go",
   "uid": "jeq-vRi7z",
-  "version": 5
+  "version": 4
 }

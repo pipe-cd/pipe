@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 3,
+  "id": 11,
   "links": [],
   "panels": [
     {
@@ -55,7 +55,7 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 7,
+        "w": 5,
         "x": 0,
         "y": 1
       },
@@ -112,8 +112,8 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 8,
-        "x": 7,
+        "w": 6,
+        "x": 5,
         "y": 1
       },
       "id": 12,
@@ -191,8 +191,8 @@
       },
       "gridPos": {
         "h": 3,
-        "w": 9,
-        "x": 15,
+        "w": 6,
+        "x": 11,
         "y": 1
       },
       "id": 28,
@@ -224,6 +224,66 @@
         }
       ],
       "title": "Last Config Reload ",
+      "type": "stat"
+    },
+    {
+      "datasource": null,
+      "description": "Timestamp of the last successful configuration reload.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "rgba(255, 255, 255, 0.89)",
+            "mode": "fixed"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "dateTimeAsIso"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 7,
+        "x": 17,
+        "y": 1
+      },
+      "id": 38,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {},
+        "textMode": "auto"
+      },
+      "pluginVersion": "7.5.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "prometheus_config_last_reload_success_timestamp_seconds * 1000",
+          "interval": "",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Last Successful Config Reload",
       "type": "stat"
     },
     {

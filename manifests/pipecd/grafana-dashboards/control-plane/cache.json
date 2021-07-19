@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 3,
   "links": [],
   "panels": [
     {
@@ -97,7 +97,7 @@
           "label": null,
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -130,5 +130,5 @@
   "timezone": "",
   "title": "Cache",
   "uid": "PbavQbknz",
-  "version": 7
+  "version": 3
 }
